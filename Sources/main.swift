@@ -13,9 +13,9 @@ func connectWidgets(from builder: Builder) {
     let minusButton  = ToggleButtonRef(cPointer: get(name: "minus"))
     let timesButton  = ToggleButtonRef(cPointer: get(name: "times"))
     let divButton    = ToggleButtonRef(cPointer: get(name: "divide"))
-    let statusBar    = StatusbarRef(cPointer: get(name: "statusBar"))
-    let valueSlider  = ScaleRef(cPointer: get(name: "slider"))
-    let textView     = TextViewRef(cPointer: get(name: "textView"))
+//    let statusBar    = StatusbarRef(cPointer: get(name: "statusBar"))
+//    let valueSlider  = ScaleRef(cPointer: get(name: "slider"))
+    var textView     = TextViewRef(cPointer: get(name: "textView"))
     var resultLabel  = LabelRef(cPointer: get(name: "resultLabel"))
     let equalsButton = ButtonRef(cPointer: get(name: "equalsButton"))
     //
@@ -30,8 +30,10 @@ func connectWidgets(from builder: Builder) {
     let calc: () -> (l: String, r: String, result: String)? = {
         let leftText  = leftEntry.text
         let rightText = rightEntry.text
-        guard let leftValue = leftText.flatMap(Double.init),
-            rightValue = rightText.flatMap(Double.init) else { return nil }
+        guard let  leftValue =  leftText.flatMap(Double.init),
+              let rightValue = rightText.flatMap(Double.init) else {
+                return nil
+        }
         let result = op(leftValue, rightValue)
         return ("\(leftValue)", "\(rightValue)", "\(result)")
     }
@@ -41,13 +43,15 @@ func connectWidgets(from builder: Builder) {
     let record: SignalHandler = {
         guard let (l, r, result) = calc() else { return }
         resultLabel.text = result
-        let buffer = TextBufferRef(textView.buffer)
-        var beg = GtkTextIter()
-        var end = GtkTextIter()
-        gtk_text_buffer_get_bounds(UnsafeMutablePointer(buffer.ptr), &beg, &end)
-        let record = buffer.getText(start: TextIterRef(&beg), end: TextIterRef(&end), includeHiddenChars: true) ?? ""
+//        let buffer = TextBufferRef(textView.buffer)
+//        var beg = GtkTextIter()
+//        var end = GtkTextIter()
+//        gtk_text_buffer_get_bounds(UnsafeMutablePointer(buffer.ptr), &beg, &end)
+//        let record = buffer.getText(start: TextIterRef(&beg), end: TextIterRef(&end), includeHiddenChars: true) ?? ""
+        let record = textView.text
         let content = record + "\n\(l) \(opLabel) \(r) = \(result)"
-        buffer.set(text: content, len: -1)
+//        buffer.set(text: content, len: -1)
+        textView.text = content
     }
     var recursive = false
     let setOperator: (ToggleButtonRef) -> () -> () = { pressedButton in
@@ -65,15 +69,15 @@ func connectWidgets(from builder: Builder) {
             recursive = false
         }
     }
-    let _ = equalsButton.connect(signal: "clicked", handler: record)
-    let _ =    leftEntry.connect(signal: "changed", handler: calculate)
-    let _ =   rightEntry.connect(signal: "changed", handler: calculate)
+    let _ = equalsButton.connect(ButtonSignalName.clicked, handler: record)
+    let _ =    leftEntry.connect(ComboBoxTextSignalName.changed, handler: calculate)
+    let _ =   rightEntry.connect(ComboBoxTextSignalName.changed, handler: calculate)
     for button in buttons {
-        let _ = button.connect(signal: "toggled", handler: setOperator(button))
+        let _ = button.connect(MenuButtonSignalName.toggled, handler: setOperator(button))
     }
 }
 
-
+//
 // run the application
 //
 guard let status = Application.run(startupHandler: {
