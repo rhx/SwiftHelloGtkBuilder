@@ -19,7 +19,7 @@ func connectWidgets(from builder: Builder) {
     var resultLabel  = LabelRef(cPointer: get(name: "resultLabel"))
     let equalsButton = ButtonRef(cPointer: get(name: "equalsButton"))
     //
-    // connect the widgets
+    // operations associated with the widgets
     //
     let buttons = [plusButton, minusButton, timesButton, divButton]
     let operators: Dictionary<String, (Double, Double) -> Double> = [
@@ -69,11 +69,16 @@ func connectWidgets(from builder: Builder) {
             recursive = false
         }
     }
-    let _ = equalsButton.connect(ButtonSignalName.clicked, handler: record)
-    let _ =    leftEntry.connect(ComboBoxTextSignalName.changed, handler: calculate)
-    let _ =   rightEntry.connect(ComboBoxTextSignalName.changed, handler: calculate)
+    //
+    // connect the widgets
+    //
+    leftEntry.connect( ComboBoxTextSignalName.changed, handler: calculate)
+    rightEntry.connect(ComboBoxTextSignalName.changed, handler: calculate)
+
+    equalsButton.connect(signal:.clicked, to: record)
+
     for button in buttons {
-        let _ = button.connect(MenuButtonSignalName.toggled, handler: setOperator(button))
+        button.connect(signal:.toggled, to: setOperator(button))
     }
 }
 
