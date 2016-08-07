@@ -32,17 +32,17 @@ Author: Rene Hexel
   <!-- interface-license-type bsd2c -->
   <!-- interface-copyright 2016 by Rene Hexel -->
   <!-- interface-authors Rene Hexel -->
-  <object class="GtkAdjustment" id="sliderRange">
+  <!-- object class="GtkAdjustment" id="sliderRange">
     <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
-  </object>
+  </object -->
   <object class="GtkBox" id="vbox">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="hexpand">False</property>
     <property name="orientation">vertical</property>
-    <child>
+    <!-- child>
       <object class="GtkToolbar" id="toolBar">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
@@ -61,12 +61,12 @@ Author: Rene Hexel
           <class name="primary-toolbar"/>
         </style>
       </object>
-      <packing>
+      < packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">0</property>
       </packing>
-    </child>
+    </child -->
     <child>
       <object class="GtkBox" id="hbox">
         <property name="visible">True</property>
@@ -194,7 +194,7 @@ Author: Rene Hexel
         <property name="position">1</property>
       </packing>
     </child>
-    <child>
+    <!-- child>
       <object class="GtkScale" id="slider">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
@@ -207,7 +207,7 @@ Author: Rene Hexel
         <property name="fill">True</property>
         <property name="position">2</property>
       </packing>
-    </child>
+    </child -->
     <child>
       <object class="GtkTextView" id="textView">
         <property name="visible">True</property>
