@@ -18,7 +18,7 @@ extension Builder {
     /// - parameter resource:   resource file to search for
     convenience init?(_ resource: String) {
         self.init()
-        var lastError: ErrorProtocol?
+        var lastError: Error?
         for path in ["Resources", cwd, "\(appDir)/Resources", "\(appDir)/../Resources", "/usr/share/\(appName)", "/usr/local/share/\(appName)", "/Library/Application Support/\(appName)"] {
             do {
                 let _ = try addFrom(file: "\(path)/\(resource)")
@@ -54,9 +54,11 @@ func connectWidgets(from builder: Builder) {
     // operations associated with the widgets
     //
     let buttons = [plusButton, minusButton, timesButton, divButton]
-    let operators: Dictionary<String, (Double, Double) -> Double> = [
-        "+" : (+),  "-" : (-),  "*" : (*),  "/" : (/)
-    ]
+    let add: (Double, Double) -> Double = (+)
+    let sub: (Double, Double) -> Double = (-)
+    let div: (Double, Double) -> Double = (/)
+    let mul: (Double, Double) -> Double = (*)
+    let operators = [ "+" : add,  "-" : sub,  "*" : mul,  "/" : div ]
     var opLabel = "+"
     var op = operators[opLabel]!
     let calc: () -> (l: String, r: String, result: String)? = {
