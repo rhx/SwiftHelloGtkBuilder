@@ -6,7 +6,7 @@ import Gtk
 
 var settings: Gtk.Settings!
 let cwd = getCurrentDir()!
-let appInvocation = Process.arguments[0]
+let appInvocation = CommandLine.arguments[0]
 let appFull = findProgramInPath(program: appInvocation)!
 let appDir = pathGetDirname(fileName: appFull)!
 let appName = pathGetBasename(fileName: appInvocation)!
@@ -41,15 +41,15 @@ extension Builder {
 ///
 func connectWidgets(from builder: Builder) {
     let get = builder.getObject
-    let leftEntry    = EntryRef(cPointer: get(name: "leftText"))
-    let rightEntry   = EntryRef(cPointer: get(name: "rightText"))
-    let plusButton   = ToggleButtonRef(cPointer: get(name: "plus"))
-    let minusButton  = ToggleButtonRef(cPointer: get(name: "minus"))
-    let timesButton  = ToggleButtonRef(cPointer: get(name: "times"))
-    let divButton    = ToggleButtonRef(cPointer: get(name: "divide"))
-    var textView     = TextViewRef(cPointer: get(name: "textView"))
-    var resultLabel  = LabelRef(cPointer: get(name: "resultLabel"))
-    let equalsButton = ButtonRef(cPointer: get(name: "equalsButton"))
+    let leftEntry    = EntryRef(cPointer: get("leftText"))
+    let rightEntry   = EntryRef(cPointer: get("rightText"))
+    let plusButton   = ToggleButtonRef(cPointer: get("plus"))
+    let minusButton  = ToggleButtonRef(cPointer: get("minus"))
+    let timesButton  = ToggleButtonRef(cPointer: get("times"))
+    let divButton    = ToggleButtonRef(cPointer: get("divide"))
+    var textView     = TextViewRef(cPointer: get("textView"))
+    var resultLabel  = LabelRef(cPointer: get("resultLabel"))
+    let equalsButton = ButtonRef(cPointer: get("equalsButton"))
     //
     // operations associated with the widgets
     //
@@ -100,8 +100,8 @@ func connectWidgets(from builder: Builder) {
     //
     // connect the widgets
     //
-    leftEntry.connect( ComboBoxTextSignalName.changed, handler: calculate)
-    rightEntry.connect(ComboBoxTextSignalName.changed, handler: calculate)
+    leftEntry.connect( EditableSignalName.changed, handler: calculate)
+    rightEntry.connect(EditableSignalName.changed, handler: calculate)
 
     equalsButton.connect(signal:.clicked, to: record)
 
@@ -117,7 +117,7 @@ guard let status = Application.run(startupHandler: {
     var app = $0
     settings = Settings.getDefault()
     if let builder = Builder("menus.ui") {
-        app.menubar = UnsafeMutablePointer(builder.getObject(name: "menubar"))
+        builder.getObject(name: "menubar").withMemoryRebound(to: GMenuModel.self, capacity: 1) { app.menubar = $0 }
     }
 }, activationHandler: { app in
     guard let builder = Builder("appwindow.ui") else {
