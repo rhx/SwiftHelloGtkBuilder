@@ -7,9 +7,9 @@ import Gtk
 var settings: Gtk.Settings!
 let cwd = getCurrentDir()!
 let appInvocation = CommandLine.arguments[0]
-let appFull = findProgramInPath(program: appInvocation)!
-let appDir = pathGetDirname(fileName: appFull)!
-let appName = pathGetBasename(fileName: appInvocation)!
+let appFull = findProgramInPath(program: UnsafeMutablePointer(mutating: appInvocation))!
+let appDir = pathGetDirname(fileName: UnsafeMutablePointer(mutating: appFull))!
+let appName = pathGetBasename(fileName: UnsafeMutablePointer(mutating: appInvocation))!
 
 /// Convenience extensions for GtkBuilder to search for .ui files
 extension Builder {
