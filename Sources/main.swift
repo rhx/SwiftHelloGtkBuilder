@@ -1,6 +1,6 @@
 import CGtk
 import GLib
-import GObject
+import GLibObject
 import GIO
 import Gtk
 
