@@ -20,7 +20,13 @@ if [ -e "${MACOS_BIN}/${Mod}" -a \
 fi
 cp -p "${BUILD_BIN}/${Mod}" "${MACOS_BIN}"
 echo 'APPL????' > ${APP_CONTENTS}/PkgInfo
-sed < "${RESOURCES_DIR}/Info.plist" > "${APP_CONTENTS}/Info.plist"	\
+substres=`( cd ${RESOURCES_DIR} && echo *.plist *.ui )`
+for res in $substres ; do
+  sed < "${RESOURCES_DIR}/${res}" > "${APP_CONTENTS}/${res}"	\
+	-e 's/\$.Module./'"${Module}.sh/g"			\
+	-e 's/\$.module./'"${module}.sh/g"			\
+	-e 's/\$.Mod./'"${Mod}.sh/g"				\
+	-e 's/\$.mod./'"${mod}.sh/g"				\
 	-e 's/\$.EXECUTABLE_NAME./'"${EXECUTABLE_NAME}.sh/g"	\
 	-e 's/\$.PRODUCT_NAME./'"${PRODUCT_NAME}/g"		\
 	-e 's/\$.MACOSX_DEPLOYMENT_TARGET./'"${MACOSX_DEPLOYMENT_TARGET}/g"\
