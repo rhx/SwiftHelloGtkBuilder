@@ -119,6 +119,9 @@ guard let status = Application.run(startupHandler: {
     if let builder = Builder("menus.ui") {
         builder.getObject(name: "menubar").withMemoryRebound(to: GMenuModel.self, capacity: 1) { app.menubar = $0 }
     }
+    if app.prefersAppMenu(), let builder = Builder("appmenu.ui") {
+        builder.getObject(name: "appmenu").withMemoryRebound(to: GMenuModel.self, capacity: 1) { app.appMenu = $0 }
+    }
 }, activationHandler: { app in
     guard let builder = Builder("appwindow.ui") else {
         print("Could not build the application user interface")
