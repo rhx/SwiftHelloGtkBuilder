@@ -10,8 +10,9 @@ echo Bundling `echo "${APP_DIR}" | cut -c${wc}- | sed 's|^[^/]*/||'`
 APP_CONTENTS="${APP_DIR}/Contents"
 MACOS_BIN="${APP_CONTENTS}/MacOS"
 FRAMEWORKS_FOLDER_PATH="${APP_CONTENTS}/Frameworks"
+RESOURCES_FOLDER_PATH="${APP_CONTENTS}/Resources"
 mkdir -p "${MACOS_BIN}"
-rm -rf "${APP_CONTENTS}/Resources"
+rm -rf "${RESOURCES_FOLDER_PATH}"
 cp -pR "${RESOURCES_DIR}" "${APP_CONTENTS}"
 if [ -e "${MACOS_BIN}/${Mod}" -a \
       !	"${BUILD_BIN}/${Mod}" -nt "${MACOS_BIN}/${Mod}" ]; then
@@ -20,21 +21,34 @@ if [ -e "${MACOS_BIN}/${Mod}" -a \
 fi
 cp -p "${BUILD_BIN}/${Mod}" "${MACOS_BIN}"
 echo 'APPL????' > ${APP_CONTENTS}/PkgInfo
-substres=`( cd ${RESOURCES_DIR} && echo *.plist *.ui )`
-for res in $substres ; do
-  sed < "${RESOURCES_DIR}/${res}" > "${APP_CONTENTS}/${res}"	\
-	-e 's/\$.Module./'"${Module}.sh/g"			\
-	-e 's/\$.module./'"${module}.sh/g"			\
-	-e 's/\$.Mod./'"${Mod}.sh/g"				\
-	-e 's/\$.mod./'"${mod}.sh/g"				\
-	-e 's/\$.EXECUTABLE_NAME./'"${EXECUTABLE_NAME}.sh/g"	\
-	-e 's/\$.PRODUCT_NAME./'"${PRODUCT_NAME}/g"		\
+substplist=`( cd ${RESOURCES_DIR} && echo *.plist )`
+for plist in $substplist ; do
+  sed < "${RESOURCES_DIR}/${plist}" > "${APP_CONTENTS}/${plist}"	\
+	-e 's/\$.Module./'"${Module}/g"					\
+	-e 's/\$.module./'"${module}/g"					\
+	-e 's/\$.Mod./'"${Mod}/g"					\
+	-e 's/\$.mod./'"${mod}/g"					\
+	-e 's/\$.EXECUTABLE_NAME./'"${EXECUTABLE_NAME}.sh/g"		\
+	-e 's/\$.PRODUCT_NAME./'"${PRODUCT_NAME}/g"			\
 	-e 's/\$.MACOSX_DEPLOYMENT_TARGET./'"${MACOSX_DEPLOYMENT_TARGET}/g"\
 	-e 's/\$.PRODUCT_BUNDLE_IDENTIFIER./'"${PRODUCT_BUNDLE_IDENTIFIER}/g"
+done
+substres=`( cd ${RESOURCES_DIR} && echo *.ui )`
+for res in $substres ; do
+  sed < "${RESOURCES_DIR}/${res}" > "${RESOURCES_FOLDER_PATH}/${res}"	\
+	-e 's/\$.Module./'"${Module}/g"					\
+	-e 's/\$.module./'"${module}/g"					\
+	-e 's/\$.Mod./'"${Mod}/g"					\
+	-e 's/\$.mod./'"${mod}/g"					\
+	-e 's/\$.EXECUTABLE_NAME./'"${EXECUTABLE_NAME}.sh/g"		\
+	-e 's/\$.PRODUCT_NAME./'"${PRODUCT_NAME}/g"			\
+	-e 's/\$.MACOSX_DEPLOYMENT_TARGET./'"${MACOSX_DEPLOYMENT_TARGET}/g"\
+	-e 's/\$.PRODUCT_BUNDLE_IDENTIFIER./'"${PRODUCT_BUNDLE_IDENTIFIER}/g"
+done
 cat > "${MACOS_BIN}/${EXECUTABLE_NAME}.sh" << EOF
 #!/bin/bash
 #
-# Gtk Wrapper to set up environment
+# Gtk Wrapper to set up environment for ${FULL_PRODUCT_NAME}
 #
 if test "x\$GTK_DEBUG_LAUNCHER" != x; then
     set -x
