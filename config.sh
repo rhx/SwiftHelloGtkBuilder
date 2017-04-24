@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 ver=3.0
-Mod=HelloGtkBuilder
+Mod=`grep name: Package.swift | cut -d'"' -f2`
 ID=io.github.rhx
 Module=${Mod}-$ver
 mod=`echo "${Mod}" | tr '[:upper:]' '[:lower:]'`+
