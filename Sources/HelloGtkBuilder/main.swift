@@ -6,10 +6,10 @@ import Gtk
 
 var settings: Gtk.Settings!
 let cwd = getCurrentDir()!
-let appInvocation = CommandLine.arguments[0]
-let appFull = findProgramInPath(program: UnsafeMutablePointer(mutating: appInvocation))!
-let appDir = pathGetDirname(fileName: UnsafeMutablePointer(mutating: appFull))!
-let appName = pathGetBasename(fileName: UnsafeMutablePointer(mutating: appInvocation))!
+var appInvocation = CommandLine.arguments[0]
+var appFull = findProgramInPath(program: appInvocation)!
+let appDir = pathGetDirname(fileName: appFull)!
+let appName = pathGetBasename(fileName: appInvocation)!
 
 /// Convenience extensions for GtkBuilder to search for .ui files
 extension Builder {
@@ -41,15 +41,15 @@ extension Builder {
 ///
 func connectWidgets(from builder: Builder) {
     let get = builder.getObject
-    let leftEntry    = EntryRef(cPointer: get("leftText"))
-    let rightEntry   = EntryRef(cPointer: get("rightText"))
-    let plusButton   = ToggleButtonRef(cPointer: get("plus"))
-    let minusButton  = ToggleButtonRef(cPointer: get("minus"))
-    let timesButton  = ToggleButtonRef(cPointer: get("times"))
-    let divButton    = ToggleButtonRef(cPointer: get("divide"))
-    var textView     = TextViewRef(cPointer: get("textView"))
-    var resultLabel  = LabelRef(cPointer: get("resultLabel"))
-    let equalsButton = ButtonRef(cPointer: get("equalsButton"))
+    let leftEntry    = EntryRef(cPointer: get("leftText")!)
+    let rightEntry   = EntryRef(cPointer: get("rightText")!)
+    let plusButton   = ToggleButtonRef(cPointer: get("plus")!)
+    let minusButton  = ToggleButtonRef(cPointer: get("minus")!)
+    let timesButton  = ToggleButtonRef(cPointer: get("times")!)
+    let divButton    = ToggleButtonRef(cPointer: get("divide")!)
+    var textView     = TextViewRef(cPointer: get("textView")!)
+    var resultLabel  = LabelRef(cPointer: get("resultLabel")!)
+    let equalsButton = ButtonRef(cPointer: get("equalsButton")!)
     //
     // operations associated with the widgets
     //
