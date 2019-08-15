@@ -47,8 +47,8 @@ func connectWidgets(from builder: Builder) {
     let minusButton  = ToggleButtonRef(cPointer: get("minus")!)
     let timesButton  = ToggleButtonRef(cPointer: get("times")!)
     let divButton    = ToggleButtonRef(cPointer: get("divide")!)
-    var textView     = TextViewRef(cPointer: get("textView")!)
-    var resultLabel  = LabelRef(cPointer: get("resultLabel")!)
+    let textView     = TextViewRef(cPointer: get("textView")!)
+    let resultLabel  = LabelRef(cPointer: get("resultLabel")!)
     let equalsButton = ButtonRef(cPointer: get("equalsButton")!)
     //
     // operations associated with the widgets
@@ -82,8 +82,7 @@ func connectWidgets(from builder: Builder) {
         textView.text = content
     }
     var recursive = false
-    let setOperator: (ToggleButtonRef) -> () -> () = { pressedButton in
-        var button = pressedButton
+    let setOperator: (ToggleButtonRef) -> () -> () = { button in
         let label = button.label!
         let newOperator = operators[label]!
         return {
@@ -91,7 +90,7 @@ func connectWidgets(from builder: Builder) {
             recursive = true
             op = newOperator
             opLabel = label
-            for var other in buttons { other.active = false }
+            for other in buttons { other.active = false }
             button.active = true
             calculate()
             recursive = false
