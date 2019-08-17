@@ -112,8 +112,7 @@ func connectWidgets(from builder: Builder) {
 //
 // run the application
 //
-guard let status = Application.run(startupHandler: {
-    var app = $0
+guard let status = Application.run(startupHandler: { app in
     settings = Settings.getDefault()
     if let builder = Builder("menus.ui") {
         builder.getObject(name: "menubar").withMemoryRebound(to: GMenuModel.self, capacity: 1) { app.menubar = $0 }
@@ -135,7 +134,7 @@ guard let status = Application.run(startupHandler: {
         app.quit()
         return
     }
-    var window = ApplicationWindowRef(application: app)
+    let window = ApplicationWindowRef(application: app)
     let widget = WidgetRef(cPointer: box)
     window.add(widget: widget)
     window.title = "Hello GtkBuilder"
