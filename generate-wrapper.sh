@@ -8,7 +8,7 @@
 if ! pushd .build/gir2swift >/dev/null 2>&1 ; then
 	mkdir -p .build
 	pushd .build >/dev/null
-	git clone https://github.com/rhx/gir2swift.git
+	git clone file:///Users/rh/src/swift/rh/gtk/gir2swift
 	cd gir2swift && ./build.sh
 fi
 export PATH=`pwd`/.build/debug:${PATH}
