@@ -21,7 +21,7 @@ extension Builder {
         var lastError: Error?
         for path in ["Resources", cwd, "\(appDir)/Resources", "\(appDir)/../Resources", "/usr/share/\(appName)", "/usr/local/share/\(appName)", "/Library/Application Support/\(appName)"] {
             do {
-                let _ = try addFrom(file: "\(path)/\(resource)")
+                let _ = try addFromFile(filename: "\(path)/\(resource)")
                 lastError = nil
                 break
             } catch {
@@ -34,22 +34,31 @@ extension Builder {
             return nil
         }
     }
+
+    /// Get the given object and wrap it in the given `Object` subtype
+    /// - Parameters:
+    ///   - identifier: A name identifying the object in the builder file
+    ///   - cons: A type constructor taking a raw pointer to an underlying `GObject` class/subclass pointer and returning a type reference
+    /// - Returns: The constructed type
+    func get<T: ObjectProtocol>(_ identifier: UnsafePointer<gchar>, _ cons: (UnsafeMutableRawPointer) -> T) -> T {
+        cons(getObject(name: identifier)!.ptr)
+    }
 }
+
 /// Bind all the widgets together
 ///
 /// - parameter builder: GtkBuilder to extract the widgets from
 ///
 func connectWidgets(from builder: Builder) {
-    let get = builder.getObject
-    let leftEntry    = EntryRef(cPointer: get("leftText")!)
-    let rightEntry   = EntryRef(cPointer: get("rightText")!)
-    let plusButton   = ToggleButtonRef(cPointer: get("plus")!)
-    let minusButton  = ToggleButtonRef(cPointer: get("minus")!)
-    let timesButton  = ToggleButtonRef(cPointer: get("times")!)
-    let divButton    = ToggleButtonRef(cPointer: get("divide")!)
-    let textView     = TextViewRef(cPointer: get("textView")!)
-    let resultLabel  = LabelRef(cPointer: get("resultLabel")!)
-    let equalsButton = ButtonRef(cPointer: get("equalsButton")!)
+    let leftEntry    = builder.get("leftText",  EntryRef.init)
+    let rightEntry   = builder.get("rightText", EntryRef.init)
+    let plusButton   = builder.get("plus", ToggleButtonRef.init)
+    let minusButton  = builder.get("minus", ToggleButtonRef.init)
+    let timesButton  = builder.get("times", ToggleButtonRef.init)
+    let divButton    = builder.get("divide", ToggleButtonRef.init)
+    let textView     = builder.get("textView", TextViewRef.init)
+    let resultLabel  = builder.get("resultLabel", LabelRef.init)
+    let equalsButton = builder.get("equalsButton", ButtonRef.init)
     //
     // operations associated with the widgets
     //
@@ -115,10 +124,10 @@ func connectWidgets(from builder: Builder) {
 guard let status = Application.run(startupHandler: { app in
     settings = Settings.getDefault()
     if let builder = Builder("menus.ui") {
-        builder.getObject(name: "menubar").withMemoryRebound(to: GMenuModel.self, capacity: 1) { app.menubar = $0 }
+        app.menubar = builder.get("menubar", MenuModelRef.init)
     }
     if app.prefersAppMenu(), let builder = Builder("appmenu.ui") {
-        builder.getObject(name: "appmenu").withMemoryRebound(to: GMenuModel.self, capacity: 1) { app.appMenu = $0 }
+        app.appMenu = builder.get("appmenu", MenuModelRef.init)
     }
 }, activationHandler: { app in
     guard let builder = Builder("appwindow.ui") else {
@@ -135,7 +144,7 @@ guard let status = Application.run(startupHandler: { app in
         return
     }
     let window = ApplicationWindowRef(application: app)
-    let widget = WidgetRef(cPointer: box)
+    let widget = WidgetRef(raw: box.ptr)
     window.add(widget: widget)
     window.title = "Hello GtkBuilder"
     window.canFocus = true
