@@ -126,9 +126,6 @@ guard let status = Application.run(startupHandler: { app in
     if let builder = Builder("menus.ui") {
         app.menubar = builder.get("menubar", MenuModelRef.init)
     }
-    if app.prefersAppMenu(), let builder = Builder("appmenu.ui") {
-        app.appMenu = builder.get("appmenu", MenuModelRef.init)
-    }
 }, activationHandler: { app in
     guard let builder = Builder("appwindow.ui") else {
         print("Could not build the application user interface")
@@ -138,20 +135,14 @@ guard let status = Application.run(startupHandler: { app in
     //
     // set up the window
     //
-    guard let box = builder.getObject(name: "vbox") else {
-        print("Could not build application window")
-        app.quit()
-        return
-    }
+    let box = builder.get("vbox", BoxRef.init)
     let window = ApplicationWindowRef(application: app)
-    let widget = WidgetRef(raw: box.ptr)
-    window.add(widget: widget)
+    window.set(child: box)
     window.title = "Hello GtkBuilder"
     window.canFocus = true
-    window.borderWidth = 1
-    window.grabFocus()
-    window.showAll()
-    widget.grabFocus()
+    _ = window.grabFocus()
+    window.present()
+    _ = box.grabFocus()
     //
     // connect the widgets
     //
