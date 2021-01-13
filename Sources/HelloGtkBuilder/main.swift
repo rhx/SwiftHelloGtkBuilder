@@ -91,31 +91,27 @@ func connectWidgets(from builder: Builder) {
         textView.text = content
     }
     var recursive = false
-    let setOperator: (ToggleButtonRef) -> () -> () = { button in
+    let setOperator: (ToggleButtonRef) -> () = { button in
         let label = button.label!
         let newOperator = operators[label]!
-        return {
-            if recursive { return }
-            recursive = true
-            op = newOperator
-            opLabel = label
-            for other in buttons { other.active = false }
-            button.active = true
-            calculate()
-            recursive = false
-        }
+        if recursive { return }
+        recursive = true
+        op = newOperator
+        opLabel = label
+        for other in buttons { other.active = false }
+        button.active = true
+        calculate()
+        recursive = false
     }
     //
     // connect the widgets
     //
-    leftEntry.connect( EditableSignalName.changed, handler: calculate)
-    rightEntry.connect(EditableSignalName.changed, handler: calculate)
+    leftEntry.onEditingDone  { _ in calculate() }
+    rightEntry.onEditingDone { _ in calculate() }
 
-    equalsButton.connect(signal:.clicked, to: record)
+    equalsButton.onClicked { _ in record() }
 
-    for button in buttons {
-        button.connect(signal:.toggled, to: setOperator(button))
-    }
+    buttons.forEach { $0.onToggled(handler: setOperator) }
 }
 
 //
