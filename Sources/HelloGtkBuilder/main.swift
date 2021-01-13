@@ -10,6 +10,9 @@ var appInvocation = CommandLine.arguments[0]
 var appFull = findProgramInPath(program: appInvocation)!
 let appDir = pathGetDirname(fileName: appFull)!
 let appName = pathGetBasename(fileName: appInvocation)!
+var appActionEntries = [
+    GActionEntry(name: g_strdup("quit"), activate: { Gtk.ApplicationRef(gpointer: $2).quit() }, parameter_type: nil, state: nil, change_state: nil, padding: (0, 0, 0))
+]
 
 /// Convenience extensions for GtkBuilder to search for .ui files
 extension Builder {
@@ -118,6 +121,7 @@ func connectWidgets(from builder: Builder) {
 // run the application
 //
 guard let status = Application.run(startupHandler: { app in
+    app.addAction(entries: &appActionEntries, nEntries: appActionEntries.count, userData: app.ptr)
     settings = Settings.getDefault()
     if let builder = Builder("menus.ui") {
         app.menubar = builder.get("menubar", MenuModelRef.init)
