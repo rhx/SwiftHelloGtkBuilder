@@ -1,0 +1,69 @@
+name: macOS 10.15
+
+# Dependencies of this package
+env:
+  MACOS_BREW: ${{ 'gtk+3 pango glib glib-networking gobject-introspection pkg-config jq' }}
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # macOS tasks
+  build-mac-catalina-swift-latest:
+    runs-on: macos-10.15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '12.3'
+
+      - name: Print Swift version to confirm
+        run: swift --version
+
+      - name: Fetch dependencies for general repository
+        run: brew install $MACOS_BREW
+
+      - name: Checkout SwiftHelloGtkBuilder
+        uses: actions/checkout@v2
+        with:
+          path: SwiftHelloGtkBuilder
+
+      - name: Build Swift Wrappers
+        run: |
+          cd SwiftHelloGtkBuilder
+          ./run-gir2swift.sh
+          echo "GIR2SWIFT_PATH=${PWD}/checkouts/gir2swift/.build/release/gir2swift" >> $GITHUB_ENV
+          cd ..
+
+      - name: Build SwiftHelloGtkBuilder
+        run: |
+          cd SwiftHelloGtkBuilder
+          swift build -Xswiftc -suppress-warnings `./run-gir2swift.sh flags -noUpdate`
+          cd ..
+
+      - name: Create SwiftHelloGtkBuilder App Bundle
+        run: |
+          cd SwiftHelloGtkBuilder
+          ./app-bundle.sh
+          cd ..
+
+      - name: Remove unneeded files and archive artefacts
+        run: | 
+          cd SwiftHelloGtkBuilder
+          swift package clean
+          rm -rf .build/repositories
+          cd ..
+
+      - name: 'Upload Artefact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artefact-catalina
+          path: |
+            SwiftHelloGtkBuilder/
+          retention-days: 1
