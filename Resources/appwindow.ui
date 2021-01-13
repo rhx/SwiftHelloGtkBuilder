@@ -1,248 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 
-
-Copyright (c) 2016 by Rene Hexel
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer. 
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution. 
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-Author: Rene Hexel
-
--->
 <interface>
-  <requires lib="gtk+" version="3.18"/>
-  <!-- interface-license-type bsd2c -->
-  <!-- interface-copyright 2016 by Rene Hexel -->
-  <!-- interface-authors Rene Hexel -->
-  <!-- object class="GtkAdjustment" id="sliderRange">
-    <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object -->
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="vbox">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="hexpand">False</property>
+    <property name="can_focus">0</property>
+    <property name="hexpand">0</property>
     <property name="orientation">vertical</property>
-    <!-- child>
-      <object class="GtkToolbar" id="toolBar">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <child>
-          <object class="GtkToolButton" id="quit">
-            <property name="can_focus">False</property>
-            <property name="action_name">app.quit</property>
-            <property name="icon_name">application-exit</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="homogeneous">True</property>
-          </packing>
-        </child>
-        <style>
-          <class name="primary-toolbar"/>
-        </style>
-      </object>
-      < packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
-    </child -->
     <child>
       <object class="GtkBox" id="hbox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can_focus">0</property>
         <child>
           <object class="GtkEntry" id="leftText">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="hexpand">1</property>
             <property name="placeholder_text" translatable="yes">Enter Number</property>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid" id="operators">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can_focus">0</property>
             <child>
               <object class="GtkToggleButton" id="plus">
                 <property name="label" translatable="yes">+</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="active">True</property>
+                <property name="receives_default">1</property>
+                <property name="active">1</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="minus">
                 <property name="label" translatable="yes">-</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="receives_default">1</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="times">
                 <property name="label" translatable="yes">*</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="receives_default">1</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="divide">
                 <property name="label" translatable="yes">/</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="receives_default">1</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkEntry" id="rightText">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="hexpand">1</property>
             <property name="placeholder_text" translatable="yes">Enter Number</property>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="equalsButton">
             <property name="label" translatable="yes"> = </property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
+            <property name="receives_default">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="resultLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_left">8</property>
-            <property name="margin_right">8</property>
+            <property name="can_focus">0</property>
+            <property name="margin-start">8</property>
+            <property name="margin-end">8</property>
             <property name="label" translatable="yes">   ?  </property>
             <property name="justify">right</property>
             <attributes>
-              <attribute name="weight" value="semibold"/>
-              <attribute name="foreground" value="#2e2e34343636"/>
+              <attribute name="weight" value="semibold"></attribute>
+              <attribute name="foreground" value="#2e2e34343636"></attribute>
             </attributes>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
-    <!-- child>
-      <object class="GtkScale" id="slider">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="adjustment">sliderRange</property>
-        <property name="round_digits">1</property>
-        <property name="draw_value">False</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
-    </child -->
     <child>
       <object class="GtkTextView" id="textView">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="margin_left">2</property>
-        <property name="margin_right">2</property>
+        <property name="vexpand">1</property>
+        <property name="margin-start">2</property>
+        <property name="margin-end">2</property>
         <property name="margin_top">2</property>
         <property name="margin_bottom">2</property>
         <property name="wrap_mode">word</property>
         <property name="input_hints">GTK_INPUT_HINT_SPELLCHECK | GTK_INPUT_HINT_WORD_COMPLETION | GTK_INPUT_HINT_NONE</property>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="fill">True</property>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkStatusbar" id="statusBar">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="margin_left">10</property>
-        <property name="margin_right">10</property>
+        <property name="can_focus">0</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
         <property name="margin_start">10</property>
         <property name="margin_end">10</property>
         <property name="margin_top">6</property>
         <property name="margin_bottom">6</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">4</property>
-      </packing>
     </child>
   </object>
 </interface>
