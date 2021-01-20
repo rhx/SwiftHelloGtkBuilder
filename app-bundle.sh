@@ -11,9 +11,12 @@ APP_CONTENTS="${APP_DIR}/Contents"
 MACOS_BIN="${APP_CONTENTS}/MacOS"
 FRAMEWORKS_FOLDER_PATH="${APP_CONTENTS}/Frameworks"
 RESOURCES_FOLDER_PATH="${APP_CONTENTS}/Resources"
+GENERATED_BUNDLE=`echo $BUILD_DIR/*/$BUNDLE_NAME | head -n1`
+BUNDLE_PATH="${APP_DIR}/$BUNDLE_NAME"
 mkdir -p "${MACOS_BIN}"
-rm -rf "${RESOURCES_FOLDER_PATH}"
+rm -rf "${RESOURCES_FOLDER_PATH}" "${BUNDLE_PATH}"
 cp -pR "${RESOURCES_DIR}" "${APP_CONTENTS}"
+cp -pR "${GENERATED_BUNDLE}" "${APP_DIR}"
 if [ -e "${MACOS_BIN}/${Mod}" -a \
       !	"${BUILD_BIN}/${Mod}" -nt "${MACOS_BIN}/${Mod}" ]; then
 	echo `echo "${APP_DIR}" | cut -c${wc}- | sed 's|^[^/]*/||'`/Contents/MacOS/${Mod} is up to date.

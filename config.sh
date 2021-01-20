@@ -10,7 +10,8 @@ PRODUCT_NAME=${Mod}
 FULL_PRODUCT_NAME=${Mod}.app
 PRODUCT_BUNDLE_IDENTIFIER=${ID}.${Mod}
 MACOSX_DEPLOYMENT_TARGET=10.11
-RESOURCES_DIR=`pwd`/Resources
+RESOURCES_DIR=$PWD/Sources/$Mod/Resources
+BUNDLE_NAME="${Mod}_${Mod}.bundle"
 if [ -z "$BUILD_DIR" ]; then
   if `pwd -P | grep -q Dropbox` ; then
     export BUILD_DIR="/tmp/.build-$Module"
