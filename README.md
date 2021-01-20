@@ -54,6 +54,8 @@ After that, select the executable target (not the Bundle/Framework target with t
 
 ## What is new?
 
+This now uses SPM and Foundation to package and resolve resources (`.ui` files).
+
 Experimental support for gtk 4 was added via the `gtk4` branch.
 
 Version 12 of gir2swift pulls in [PR#10](https://github.com/rhx/gir2swift/pull/10), addressing several issues:
