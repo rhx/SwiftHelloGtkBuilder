@@ -11,7 +11,53 @@ var appActionEntries = [
     GActionEntry(name: g_strdup("quit"), activate: { Gtk.ApplicationRef(gpointer: $2).quit() }, parameter_type: nil, state: nil, change_state: nil, padding: (0, 0, 0))
 ]
 
-/// Convenience extensions for GtkBuilder to load .ui files using Package Manager module bundle
+#if XCODE
+//
+// Xcode does not include the SPM-generated module finder,
+// so we include our own.  This follows the example from
+// Fabrizio Duroni's blog:
+// https://www.fabrizioduroni.it/2020/10/19/swift-package-manager-resources.html
+//
+// NOTE:
+// Since Xcode does not actually create the resource bundle,
+// you need to first create it from the command line using
+// swift build `./run-gir2swift.sh flags -noUpdate`
+// then link the generated bundle into Xcode's products folder
+// (which you can find by right-clicking on Products/HelloGtkBuilder,
+// and selectin "Show in Finder"), e.g.:
+// ln -s $PWD/.build/x86_64-apple-macosx/debug/HelloGtkBuilder_HelloGtkBuilder.bundle /Users/USERNAME/Library/Developer/Xcode/DerivedData/HelloGtkBuilder-ggjpqkaqtvyfzyarafdunoqwodzz/Build/Products/Debug
+import class Foundation.Bundle
+
+private class BundleFinder {}
+
+extension Foundation.Bundle {
+    /// Returns the resource bundle associated with the current Swift module.
+    static var module: Bundle = {
+        let bundleName = "HelloGtkBuilder_HelloGtkBuilder"
+
+        let candidates = [
+            // The Bundle should be present here when the package is linked into an App.
+            Bundle.main.resourceURL,
+
+            // The Bundle should be present here when the package is linked into a framework.
+            Bundle(for: BundleFinder.self).resourceURL,
+
+            // For command-line tools.
+            Bundle.main.bundleURL,
+        ]
+
+        for candidate in candidates {
+            let bundlePath = candidate?.appendingPathComponent(bundleName + ".bundle")
+            if let bundle = bundlePath.flatMap(Bundle.init(url:)) {
+                return bundle
+            }
+        }
+        fatalError("unable to find a bundle named \(bundleName).bundle")
+    }()
+}
+#endif
+
+/// Convenience extensions for GtkBuilder to load .ui files using Package Manager `Bundle.module`
 extension Builder {
     /// Search for the given resource in the module bundle
     ///
