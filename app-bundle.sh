@@ -16,6 +16,7 @@ BUNDLE_PATH="${APP_DIR}/$BUNDLE_NAME"
 mkdir -p "${MACOS_BIN}"
 rm -rf "${RESOURCES_FOLDER_PATH}" "${BUNDLE_PATH}"
 cp -pR "${RESOURCES_DIR}" "${APP_CONTENTS}"
+cp -pR "${MACOSX_RESOURCES_DIR}"/* "${RESOURCES_FOLDER_PATH}"
 cp -pR "${GENERATED_BUNDLE}" "${APP_DIR}"
 if [ -e "${MACOS_BIN}/${Mod}" -a \
       !	"${BUILD_BIN}/${Mod}" -nt "${MACOS_BIN}/${Mod}" ]; then
@@ -24,9 +25,9 @@ if [ -e "${MACOS_BIN}/${Mod}" -a \
 fi
 cp -p "${BUILD_BIN}/${Mod}" "${MACOS_BIN}"
 echo 'APPL????' > ${APP_CONTENTS}/PkgInfo
-substplist=`( cd ${RESOURCES_DIR} && echo *.plist )`
+substplist=`( cd ${MACOSX_RESOURCES_DIR} && echo *.plist )`
 for plist in $substplist ; do
-  sed < "${RESOURCES_DIR}/${plist}" > "${APP_CONTENTS}/${plist}"	\
+  sed < "${MACOSX_RESOURCES_DIR}/${plist}" > "${APP_CONTENTS}/${plist}"	\
 	-e 's/\$.Module./'"${Module}/g"					\
 	-e 's/\$.module./'"${module}/g"					\
 	-e 's/\$.Mod./'"${Mod}/g"					\
@@ -38,7 +39,7 @@ for plist in $substplist ; do
 done
 substres=`( cd ${RESOURCES_DIR} && echo *.ui )`
 for res in $substres ; do
-  sed < "${RESOURCES_DIR}/${res}" > "${RESOURCES_FOLDER_PATH}/${res}"	\
+  sed < "${RESOURCES_DIR}/${res}" > "${BUNDLE_PATH}/${res}"	\
 	-e 's/\$.Module./'"${Module}/g"					\
 	-e 's/\$.module./'"${module}/g"					\
 	-e 's/\$.Mod./'"${Mod}/g"					\
