@@ -15,10 +15,13 @@ gtk=`echo $BUILD_DIR/checkouts/SwiftGtk*/Sources/Gtk/Gtk-?.0.swift`
   sed -e 's/ -I ?[^ ]*//g' < Project.xcconfig.in > Project.xcconfig	&& \
   grep 'OTHER_CFLAGS' < Project.xcconfig.in | sed 's/-I */-I/g'		|  \
     tr ' ' '\n' | grep -- -I | tr '\n' ' '				|  \
-    sed -e 's/^/HEADER_SEARCH_PATHS = /' -e 's/ -I/ /g' >> Project.xcconfig
+    sed -e 's/^/HEADER_SEARCH_PATHS = /' -e 's/ -I/ /g'			   \
+        -e 's/"SWIFT_PACKAGE"/"XCODE", "SWIFT_PACKAGE"/'		   \
+    >> Project.xcconfig
 )
 ( cd ${Mod}.xcodeproj							&& \
   mv project.pbxproj project.pbxproj.in					&& \
   sed < project.pbxproj.in > project.pbxproj				   \
+    -e 's/"SWIFT_PACKAGE"/"XCODE", "SWIFT_PACKAGE"/'			   \
     -e "s|\(HEADER_SEARCH_PATHS = .\)$|\\1 \"`echo $CCFLAGS | sed -e 's/-Xcc  *-I */ /g' -e 's/^ *//' -e 's/ *$//'`\",|"
 )
