@@ -9,6 +9,10 @@ let package = Package(
         .package(name: "Gtk", url: "https://github.com/rhx/SwiftGtk.git", .branch("gtk4")),
     ],
     targets: [
-        .target(name: "HelloGtkBuilder", dependencies: ["Gtk"]),
+        .target(
+            name: "HelloGtkBuilder", 
+            dependencies: ["Gtk"],
+            resources: [ .process("Resources") ]
+        ),
     ]
 )
