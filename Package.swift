@@ -1,4 +1,4 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.3
 
 import PackageDescription
 
@@ -9,6 +9,10 @@ let package = Package(
         .package(name: "Gtk", url: "https://github.com/rhx/SwiftGtk.git", .branch("gtk3")),
     ],
     targets: [
-        .target(name: "HelloGtkBuilder", dependencies: ["Gtk"]),
+        .target(
+            name: "HelloGtkBuilder", 
+            dependencies: ["Gtk"],
+            resources: [ .process("Resources") ]
+        ),
     ]
 )
