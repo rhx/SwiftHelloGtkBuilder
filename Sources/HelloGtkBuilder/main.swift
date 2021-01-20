@@ -1,3 +1,5 @@
+import Foundation
+
 import CGtk
 import GLib
 import GLibObject
@@ -5,37 +7,29 @@ import GIO
 import Gtk
 
 var settings: Gtk.Settings!
-let cwd = getCurrentDir()!
-var appInvocation = CommandLine.arguments[0]
-var appFull = findProgramInPath(program: appInvocation)!
-let appDir = pathGetDirname(fileName: appFull)!
-let appName = pathGetBasename(fileName: appInvocation)!
 var appActionEntries = [
     GActionEntry(name: g_strdup("quit"), activate: { Gtk.ApplicationRef(gpointer: $2).quit() }, parameter_type: nil, state: nil, change_state: nil, padding: (0, 0, 0))
 ]
 
-/// Convenience extensions for GtkBuilder to search for .ui files
+/// Convenience extensions for GtkBuilder to load .ui files using Package Manager module bundle
 extension Builder {
-    /// Search for the given resource
+    /// Search for the given resource in the module bundle
     ///
-    /// - parameter resource:   resource file to search for
+    /// - parameter resource: resource <file>.ui to search for
     convenience init?(_ resource: String) {
         self.init()
-        var lastError: Error?
-        for path in ["Resources", cwd, "\(appDir)/Resources", "\(appDir)/../Resources", "/usr/share/\(appName)", "/usr/local/share/\(appName)", "/Library/Application Support/\(appName)"] {
-            do {
-                let _ = try addFromFile(filename: "\(path)/\(resource)")
-                lastError = nil
-                break
-            } catch {
-                lastError = error
-                print(error)
-            }
+
+        guard let filepath = Bundle.module.path(forResource: resource, ofType: "ui") else {
+            return nil
         }
-        if let error = lastError {
+
+        do {
+            let _ = try addFromFile(filename: filepath)
+        } catch {
             print(error)
             return nil
         }
+
     }
 
     /// Get the given object and wrap it in the given `Object` subtype
@@ -123,14 +117,14 @@ func connectWidgets(from builder: Builder) {
 guard let status = Application.run(startupHandler: { app in
     app.addAction(entries: &appActionEntries, nEntries: appActionEntries.count, userData: app.ptr)
     settings = Settings.getDefault()
-    if let builder = Builder("menus.ui") {
+    if let builder = Builder("menus") {
         app.menubar = builder.get("menubar", MenuModelRef.init)
     }
-    if app.prefersAppMenu(), let builder = Builder("appmenu.ui") {
+    if app.prefersAppMenu(), let builder = Builder("appmenu") {
         app.appMenu = builder.get("appmenu", MenuModelRef.init)
     }
 }, activationHandler: { app in
-    guard let builder = Builder("appwindow.ui") else {
+    guard let builder = Builder("appwindow") else {
         print("Could not build the application user interface")
         app.quit()
         return
